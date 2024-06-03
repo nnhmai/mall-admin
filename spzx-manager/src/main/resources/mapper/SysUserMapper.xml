@@ -1,0 +1,50 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "https://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.hqu.spzx.manager.mapper.SysUserMapper">
+    <sql id="columns">
+        id,username,password,name,phone,avatar,description,status,create_time,update_time,is_deleted
+    </sql>
+    <select id="findByPage" resultType="com.hqu.spzx.model.entity.system.SysUser">
+        select <include refid="columns"></include> from sys_user
+        where
+        <if test="keyword!=null||keyword!=''">
+            name like concat('%',#{keyword},'%') or
+            username like concat('%',#{keyword},'%') or
+            phone like concat('%',#{keyword},'%') and
+        </if>
+        <if test="createTimeBegin != null and createTimeBegin != ''">
+             create_time >= #{createTimeBegin} and
+        </if>
+        <if test="createTimeEnd != null and createTimeEnd != ''">
+             create_time &lt;= #{createTimeEnd} and
+        </if>
+        is_deleted=0
+        order by id desc
+    </select>
+    <update id="updateSysUser">
+        update sys_user
+        set username=#{userName},
+            name=#{name},
+            phone=#{phone},
+            avatar=#{avatar},
+            description=#{description},
+            update_time= now()
+        where id=#{id} and is_deleted=0
+    </update>
+    <insert id="saveSysUser">
+        insert into sys_user (username,name,password,phone,avatar,description)
+            values (#{userName},#{name},#{password},#{phone},#{avatar},#{description})
+    </insert>
+    <insert id="addAssign">
+        insert into sys_user_role (role_id,user_id) values(#{roleId},#{userId})
+    </insert>
+    <update id="deleteById">
+        update sys_user set is_deleted=1 where id=#{userId}
+    </update>
+    <delete id="deleteAssign">
+        delete from sys_user_role  where  user_id=#{userId}
+    </delete>
+</mapper>

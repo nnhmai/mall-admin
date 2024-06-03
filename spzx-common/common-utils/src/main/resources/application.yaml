@@ -1,0 +1,6 @@
+spzx:
+  minio:
+    endpointUrl: http://192.168.2.102:9001
+    accessKey: admin
+    secretKey: admin123456
+    bucketName: spzx-bucket

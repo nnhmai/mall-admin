@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "https://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.hqu.spzx.manager.mapper.CategoryMapper">
+    <sql id="columns">
+        id,name,image_url,parent_id,status,order_num,create_time,update_time
+    </sql>
+    <insert id="batchInsert">
+        insert into category (id,name,image_url,parent_id,status,order_num) values
+        <foreach collection="cachedDataList" item="list" separator=",">
+            (#{list.id},#{list.name},#{list.imageUrl},#{list.parentId},#{list.status},#{list.orderNum})
+        </foreach>
+    </insert>
+
+    <select id="findByParentId" resultType="com.hqu.spzx.model.entity.product.Category">
+        select <include refid="columns"></include> from category where parent_id=#{parentId} and is_deleted=0
+    </select>
+    <select id="countByParentId" resultType="java.lang.Integer">
+        select count(id) from category where parent_id=#{parentId} and is_deleted=0
+    </select>
+    <select id="selectAll" resultType="com.hqu.spzx.model.entity.product.Category">
+        select <include refid="columns"></include> from category where is_deleted=0
+    </select>
+    <select id="getByID" resultType="com.hqu.spzx.model.entity.product.Category">
+        select <include refid="columns"></include> from category where id=#{#categoryId} and is_deleted=0
+    </select>
+
+</mapper>

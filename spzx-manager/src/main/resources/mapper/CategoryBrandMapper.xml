@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "https://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.hqu.spzx.manager.mapper.CategoryBrandMapper">
+    <insert id="save">
+        insert into category_brand(brand_id,category_id,create_time)
+        values(#{brandId},#{categoryId},now())
+    </insert>
+    <update id="updateById">
+        update category_brand set brand_id=#{brandId},category_id=#{categoryId},update_time=now() where is_deleted=0
+    </update>
+    <update id="deleteById">
+        update category_brand set is_deleted=1 where id=#{id}
+    </update>
+
+
+    <sql id="findPageWhere">
+        <where>
+            <if test="brandId != null and brandId != ''">
+                and cb.brand_id = #{brandId}
+            </if>
+            <if test="categoryId != null and categoryId != ''">
+                and cb.category_id = #{categoryId}
+            </if>
+            and cb.is_deleted = 0
+        </where>
+    </sql>
+
+    <select id="findByPage"  resultType="com.hqu.spzx.model.entity.product.CategoryBrand">
+        select
+        cb.id,cb.brand_id,cb.category_id,cb.create_time,cb.update_time,
+        c.name as categoryName,
+        b.name as brandName, b.logo
+        from category_brand cb
+        left join category c on c.id = cb.category_id
+        left join brand b  on b.id = cb.brand_id
+        <include refid="findPageWhere"/>
+        order by cb.id desc
+    </select>
+    <select id="findBrandByCategoryId" resultType="com.hqu.spzx.model.entity.product.Brand">
+        select *
+            from brand
+                where id in(select brand_id from category_brand where category_id=#{categoryId}) and is_deleted=0
+    </select>
+</mapper>

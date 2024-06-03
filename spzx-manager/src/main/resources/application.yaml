@@ -1,0 +1,5 @@
+spring:
+  application:
+    name: spxz-manager
+  profiles:
+    active: dev

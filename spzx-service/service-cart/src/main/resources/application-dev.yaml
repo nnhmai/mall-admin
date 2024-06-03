@@ -1,0 +1,16 @@
+spring:
+  application:
+    name: service-cart
+  cloud:
+    nacos:
+      discovery:
+        server-addr: 192.168.2.102:8848
+        username: nacos
+        password: nacos
+  data:
+    redis:
+      host: 192.168.2.102
+      port: 6379
+      password: 123456
+server:
+  port: 8102

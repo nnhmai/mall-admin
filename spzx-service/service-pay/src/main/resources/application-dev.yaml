@@ -1,0 +1,34 @@
+spring:
+  application:
+    name: service-pay
+  data:
+    redis:
+      password: 123456
+      host: 192.168.2.102
+      port: 6379
+  datasource:
+    type: com.zaxxer.hikari.HikariDataSource
+    driver-class-name: com.mysql.cj.jdbc.Driver
+    hikari:
+      username: root
+      password: 123456
+    url: jdbc:mysql://192.168.2.102:3306/db_spzx?characterEncoding=utf-8&useSSL=false&allowPublicKeyRetrieval=true
+  cloud:
+    nacos:
+      discovery:
+        server-addr: 192.168.2.102:8848
+        username: nacos
+        password: nacos
+mybatis:
+  mapper-locations: classpath:/mapper/*.xml
+  configuration:
+    map-underscore-to-camel-case: true
+    auto-mapping-behavior: full
+    log-impl: org.apache.ibatis.logging.stdout.StdOutImpl
+pagehelper:
+  helper-dialect: mysql
+  reasonable: true
+  support-methods-arguments: true
+  params: countSql
+server:
+  port: 8104

@@ -1,0 +1,40 @@
+package com.hqu.spzx.serviceProduct.controller;
+
+import com.hqu.spzx.model.entity.product.Category;
+import com.hqu.spzx.model.entity.product.ProductSku;
+import com.hqu.spzx.model.vo.common.Result;
+import com.hqu.spzx.model.vo.common.ResultCodeEnum;
+import com.hqu.spzx.model.vo.h5.IndexVo;
+import com.hqu.spzx.serviceProduct.service.CategoryService;
+import com.hqu.spzx.serviceProduct.service.IndexService;
+import com.hqu.spzx.serviceProduct.service.ProductSkuService;
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.tags.Tag;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.web.bind.annotation.CrossOrigin;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
+
+import java.util.List;
+@Tag(name="首页接口管理")
+@RestController
+@RequestMapping("/api/product/index")
+public class IndexController {
+    @Autowired
+    private IndexService indexService;
+    @Autowired
+    private CategoryService categoryService;
+    @Autowired
+    private ProductSkuService productSkuService;
+    @Operation(summary = "获取首页数据")
+    @GetMapping
+    Result<IndexVo> indexVoResult(){
+        List<Category> categoryList=categoryService.findAllParent();
+        List<ProductSku> productSkus=productSkuService.findTop();
+        IndexVo indexVo=new IndexVo();
+        indexVo.setCategoryList(categoryList);
+        indexVo.setProductSkuList(productSkus);
+        return Result.build(indexVo, ResultCodeEnum.SUCCESS);
+    }
+}

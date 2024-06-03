@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "https://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.hqu.spzx.payService.mapper.PaymentMapper">
+
+
+    <insert id="save">
+        insert into payment_info (
+        id,
+        user_id,
+        order_no,
+        pay_type,
+        out_trade_no,
+        amount,
+        content,
+        payment_status,
+        callback_time,
+        callback_content
+        ) values (
+        #{id},
+        #{userId},
+        #{orderNo},
+        #{payType},
+        #{outTradeNo},
+        #{amount},
+        #{content},
+        #{paymentStatus},
+        #{callbackTime},
+        #{callbackContent}
+        )
+    </insert>
+    <select id="findByOrderNo" resultType="com.hqu.spzx.model.entity.pay.PaymentInfo">
+        select * from payment_info where order_no=#{orderNo} and is_deleted=0
+    </select>
+</mapper>

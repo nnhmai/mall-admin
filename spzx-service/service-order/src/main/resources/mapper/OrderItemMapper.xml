@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "https://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.hqu.spzx.orderService.mapper.OrderItemMapper">
+
+
+    <insert id="batchInsert">
+        insert into order_item (
+        order_id,
+        sku_id,
+        sku_name,
+        thumb_img,
+        sku_price,
+        sku_num) values
+        <foreach collection="itemList" separator="," item="item">
+            (#{orderId},#{item.skuId},#{item.skuName},#{item.thumbImg},#{item.skuPrice},#{item.skuNum})
+        </foreach>
+    </insert>
+    <select id="findByOrderId" resultType="com.hqu.spzx.model.entity.order.OrderItem">
+        select * from order_item where order_id=#{id} and is_deleted=0
+    </select>
+
+</mapper>

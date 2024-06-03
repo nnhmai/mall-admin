@@ -1,0 +1,50 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "https://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.hqu.spzx.manager.mapper.SysMenuMapper">
+    <sql id="columns">
+        id,parent_id,title,component,sort_value,status,create_time,update_time,is_deleted
+    </sql>
+    <insert id="save">
+        insert into sys_menu (parent_id,title,component,sort_value,status)
+            values (#{parentId},#{title},#{component},#{sortValue},#{status})
+    </insert>
+    <update id="updateById">
+        update sys_menu
+            set
+        <if test="title!=null and title!=''">
+            title=#{title},
+        </if>
+        <if test="component!=null and component!=''">
+            component=#{component},
+        </if>
+        <if test="sortValue!=null and sortValue!=''">
+            sort_value=#{sortValue},
+        </if>
+        <if test="status!=null and status!=''">
+            status=#{status},
+        </if>
+        <if test="parentId!=null and parentId!=''">
+            parent_id=#{parentId},
+        </if>
+            update_time= now()
+            where id=#{id} and is_deleted=0
+    </update>
+    <update id="deleteById">
+        update sys_menu set is_deleted=1 where id=#{id}
+    </update>
+    <resultMap id="sysMenuMap" type="com.hqu.spzx.model.entity.system.SysMenu" autoMapping="true"></resultMap>
+    <select id="findAllNodes" resultMap="sysMenuMap">
+        select <include refid="columns"></include> from sys_menu where is_deleted=0
+    </select>
+    <select id="findMenuById" resultType="com.hqu.spzx.model.entity.system.SysMenu">
+        select DISTINCT sys_menu.id id,sys_menu.create_time create_time,sys_menu.update_time update_time,parent_id,title,component
+        from sys_menu INNER JOIN sys_role_menu ON sys_menu.id=sys_role_menu.menu_id
+        WHERE sys_role_menu.role_id in (select role_id FROM sys_user_role where user_id=#{userId}) and sys_menu.is_deleted=0
+    </select>
+    <select id="findByParentIdSysMenus" resultType="com.hqu.spzx.model.entity.system.SysMenu">
+        select <include refid="columns"></include> from sys_menu where parent_id=#{parentId}
+    </select>
+</mapper>

@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "https://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.hqu.spzx.serviceProduct.mapper.ProductSkuMapper">
+
+
+    <select id="findByTopSale" resultType="com.hqu.spzx.model.entity.product.ProductSku">
+        select * from product_sku
+            where is_deleted=0 and id in (select id from product where is_deleted=0 and audit_status=1)
+                order by sale_num DESC limit 0,20
+    </select>
+    <select id="findById" resultType="com.hqu.spzx.model.entity.product.ProductSku">
+        select * from product_sku
+            where is_deleted=0 and id=#{skuId}
+    </select>
+    <select id="findByProductId" resultType="com.hqu.spzx.model.entity.product.ProductSku">
+        select * from product_sku
+            where is_deleted=0 and product_id=#{productId}
+    </select>
+</mapper>
